@@ -16,7 +16,7 @@ This tester checks for 4 conditions, either the result is correct (equal to expe
 
 ## To Other TA's
 
-If you find this project useful, but need any changes, require new features or have questions, please contact me via email [(seyedahmadpourihosseini@gmail.com)](mailto:seyedahmadpourihosseini@gmail.com) or telegram ([@SAPHosseini](https://telegram.me/SAPHosseini)).
+If you find this project useful, but need any changes, require new features or have questions, please contact me via email ([seyedahmadpourihosseini@gmail.com](mailto:seyedahmadpourihosseini@gmail.com)) or telegram ([@SAPHosseini](https://telegram.me/SAPHosseini)).
 
 ## Authors
 
