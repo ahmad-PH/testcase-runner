@@ -1,5 +1,6 @@
 import signal
 import subprocess
+import os
 
 from utility import TemporaryFile, green_text, red_text
 
@@ -11,6 +12,7 @@ class TestCase:
 		self.input_path = input_path
 		self.output_path = output_path
 		self.timeout_seconds = 1
+		self.containing_folder_name = os.path.basename(os.path.dirname(self.input_path))
 
 	def __repr__(self):
 		return 'in: ' + self.input_path + ' out: ' + self.output_path
@@ -28,6 +30,10 @@ class TestCase:
 		except subprocess.CalledProcessError:
 			return BadExitCodeTestCaseResult()
 
+
+		# temporary thing, cuz of saeed's mistake
+		actual_output = actual_output.replace('value for money', 'value_for_money') \
+			.replace('overal rating', 'overal_rating')
 
 		with TemporaryFile(actual_output) as actual_output_filename:
 			completed_process = subprocess.run(

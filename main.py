@@ -6,7 +6,7 @@ from testcase import TestCase
 from utility import red_text, green_text
 
 def gather_all_testcases_in_folder(foldername):
-	filenames = os.listdir(foldername)
+	filenames = sorted(os.listdir(foldername))
 	result = []
 
 	for filename in filenames:
@@ -38,6 +38,15 @@ def print_summary(summary):
 		'bad_exit_code:', red_text(str(summary['bad_exit_code']))
 	)
 
+def print_summary_by_folder(summary_by_folder):
+	for foldername in summary_by_folder:
+		print(foldername, ': ', end='')
+		print_summary(summary_by_folder[foldername])
+
+def print_summary_overall(summary):
+	print('overall: ', end='')
+	print_summary(summary)
+
 if __name__=="__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--exe', '-e', required=True, help='path to the executable to be tested.', dest="executable")
@@ -49,10 +58,18 @@ if __name__=="__main__":
 	testcases = gather_all_testcases_in_folder(args.test_folder)
 	os.chdir(os.path.dirname(args.executable))
 
-	summary = {'correct': 0, 'incorrect': 0, 'timed_out': 0, 'bad_exit_code': 0}
+	summary_by_folder = {}
+	summary_overall = {'correct': 0, 'incorrect': 0, 'timed_out': 0, 'bad_exit_code': 0}
 	for testcase in testcases:
 		print('testing {}:'.format(testcase.input_path), end=' ')
 		result = testcase.run(args.executable, args.commandline_args)
 		print(result.to_string())
-		summary[result.type_string] += 1
-	print_summary(summary)
+		summary_overall[result.type_string] += 1
+
+		if testcase.containing_folder_name not in summary_by_folder:
+			summary_by_folder[testcase.containing_folder_name] = {'correct': 0, 'incorrect': 0, 'timed_out': 0, 'bad_exit_code': 0}
+		else:
+			summary_by_folder[testcase.containing_folder_name][result.type_string] += 1
+
+	print_summary_overall(summary_overall)
+	print_summary_by_folder(summary_by_folder)
