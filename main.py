@@ -68,8 +68,8 @@ if __name__=="__main__":
 
 		if testcase.containing_folder_name not in summary_by_folder:
 			summary_by_folder[testcase.containing_folder_name] = {'correct': 0, 'incorrect': 0, 'timed_out': 0, 'bad_exit_code': 0}
-		else:
-			summary_by_folder[testcase.containing_folder_name][result.type_string] += 1
+			
+		summary_by_folder[testcase.containing_folder_name][result.type_string] += 1
 
 	print_summary_overall(summary_overall)
 	print_summary_by_folder(summary_by_folder)
