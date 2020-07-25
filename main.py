@@ -56,6 +56,11 @@ if __name__=="__main__":
 	args = parser.parse_args()
 
 	testcases = gather_all_testcases_in_folder(args.test_folder)
+
+	# ensure no address breaks because of the upcoming os.chdir:
+	args.executable = os.path.abspath(args.executable)
+	args.test_folder = os.path.abspath(args.test_folder)
+	
 	os.chdir(os.path.dirname(args.executable))
 
 	summary_by_folder = {}

@@ -22,3 +22,11 @@ def green_text(text):
 
 def red_text(text):
 	return "\u001b[31m" + text + "\033[0m" 
+
+
+def quote_path(path):
+	already_quoted = (path[0] == '\"' and path[-1] == '\"')
+	if not already_quoted:
+		return '\"' + path + '\"'
+	else:
+		return path

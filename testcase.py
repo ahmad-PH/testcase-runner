@@ -2,7 +2,7 @@ import signal
 import subprocess
 import os
 
-from utility import TemporaryFile, green_text, red_text
+from utility import TemporaryFile, green_text, red_text, quote_path
 
 def alarm_handler(signum, frame):
 	raise TimeoutError()
@@ -11,7 +11,7 @@ class TestCase:
 	def __init__(self, input_path, output_path):
 		self.input_path = input_path
 		self.output_path = output_path
-		self.timeout_seconds = 1
+		self.timeout_seconds = 3
 		self.containing_folder_name = os.path.basename(os.path.dirname(self.input_path))
 
 	def __repr__(self):
@@ -22,7 +22,7 @@ class TestCase:
 		signal.alarm(self.timeout_seconds)
 		try:
 			actual_output = subprocess.check_output(
-				"{} {} < {}".format(executable, cmd_args, self.input_path),
+				"{} {} < {}".format(quote_path(executable), cmd_args, quote_path(self.input_path)),
 				shell=True
 			).decode("utf-8")
 		except TimeoutError:
@@ -33,11 +33,12 @@ class TestCase:
 
 		# temporary thing, cuz of saeed's mistake
 		actual_output = actual_output.replace('value for money', 'value_for_money') \
-			.replace('overal rating', 'overal_rating')
+			.replace('overal rating', 'overal_rating') \
+			.replace('overall rating', 'overall_rating')
 
 		with TemporaryFile(actual_output) as actual_output_filename:
 			completed_process = subprocess.run(
-				"diff -b {} {}".format(self.output_path, actual_output_filename),
+				"diff -b -y -W 170 {} {}".format(quote_path(self.output_path), quote_path(actual_output_filename)),
 				check = False,
 				shell = True,
 				stdout= subprocess.PIPE
